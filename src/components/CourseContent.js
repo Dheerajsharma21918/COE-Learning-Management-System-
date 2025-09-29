@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './CourseContent.css';
 
-const CourseContent = ({ module, onComplete, isLastModule, quizCompleted }) => {
+const CourseContent = ({ module, onComplete, isLastModule, quizCompleted, onReviewModule }) => {
   const [videoWatched, setVideoWatched] = useState(false);
 
   const markAsWatched = () => {
@@ -68,6 +68,15 @@ const CourseContent = ({ module, onComplete, isLastModule, quizCompleted }) => {
             )}
             {quizCompleted && isLastModule && (
               <p>🎉 Congratulations! You've completed the entire course!</p>
+            )}
+            {!quizCompleted && (
+              <button 
+                onClick={onReviewModule}
+                className="btn-secondary"
+                style={{marginTop: '1rem'}}
+              >
+                🔄 Review Module Again
+              </button>
             )}
           </>
         )}

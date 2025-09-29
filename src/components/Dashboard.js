@@ -15,22 +15,29 @@ const Dashboard = () => {
       videoUrl: "https://drive.google.com/file/d/1rNPmhgvM-kn9Z-Ba-puri_ipcHkYbGsi/preview",
       description: "Learn about the SMT Screen Printer, its functions, alignment processes, and operational parameters.",
       duration: "02:59",
-      completed: false
-
+      completed: false,
+      quizPassed: false
     },
     {
       id: 2,
       title: "Solder Paste Printing Defects",
-      videoUrl: "https://drive.google.com/file/d/1xZ_AYf5gv-DvjzDwEzZbrP_yggqGixic/preview",
+      videoUrl: "https://drive.google.com/file/d/15aWklDdy_D3hr34nGOK8mLGx-av5_PRs/preview",
       description: "Understand the solder paste printing process, common defects, and quality control measures.",
-      duration: "03:32",
-      completed: false
+      duration: "04:32",
+      completed: false,
+      quizPassed: false
     }
   ]);
 
   const courseData = {
     title: "Solder Paste Printer Course",
     modules: modules
+  };
+
+  // Calculate progress based on completed modules (quizPassed)
+  const calculateProgress = () => {
+    const completedModules = modules.filter(module => module.quizPassed).length;
+    return (completedModules / modules.length) * 100;
   };
 
   const markAsComplete = (moduleId) => {
@@ -44,13 +51,45 @@ const Dashboard = () => {
   const handleQuizCompletion = (passed) => {
     setShowQuiz(false);
     if (passed) {
+      // Mark module as completed AND quiz passed
+      const updatedModules = modules.map(module => 
+        module.id === courseData.modules[currentVideo].id 
+          ? { ...module, completed: true, quizPassed: true }
+          : module
+      );
+      setModules(updatedModules);
       setQuizCompleted(true);
+      
+      // Move to next video if available
       if (currentVideo < courseData.modules.length - 1) {
         setCurrentVideo(currentVideo + 1);
         setQuizCompleted(false);
       }
+    } else {
+      // Quiz failed - reset completion status but keep video watched state
+      const updatedModules = modules.map(module => 
+        module.id === courseData.modules[currentVideo].id 
+          ? { ...module, completed: false, quizPassed: false }
+          : module
+      );
+      setModules(updatedModules);
+      setQuizCompleted(false);
     }
   };
+
+  const handleReviewModule = () => {
+    // Reset the current module's completion status when reviewing
+    const updatedModules = modules.map(module => 
+      module.id === courseData.modules[currentVideo].id 
+        ? { ...module, completed: false, quizPassed: false }
+        : module
+    );
+    setModules(updatedModules);
+    setQuizCompleted(false);
+    setShowQuiz(false);
+  };
+
+  const progress = calculateProgress();
 
   return (
     <div className="dashboard">
@@ -77,10 +116,10 @@ const Dashboard = () => {
               <div className="progress-bar">
                 <div 
                   className="progress-fill" 
-                  style={{ width: `${(currentVideo / courseData.modules.length) * 100}%` }}
+                  style={{ width: `${progress}%` }}
                 ></div>
               </div>
-              <span>Progress: {Math.round((currentVideo / courseData.modules.length) * 100)}%</span>
+              <span>Progress: {Math.round(progress)}%</span>
             </div>
           </div>
           
@@ -90,7 +129,7 @@ const Dashboard = () => {
               {courseData.modules.map((module, index) => (
                 <li 
                   key={module.id} 
-                  className={`${index === currentVideo ? 'active' : ''} ${module.completed ? 'completed' : ''}`}
+                  className={`${index === currentVideo ? 'active' : ''} ${module.quizPassed ? 'completed' : ''}`}
                   onClick={() => {
                     setCurrentVideo(index);
                     setShowQuiz(false);
@@ -99,7 +138,7 @@ const Dashboard = () => {
                 >
                   <span className="module-number">{index + 1}</span>
                   <span className="module-title">{module.title}</span>
-                  {module.completed && <span className="completed-check">✓</span>}
+                  {module.quizPassed && <span className="completed-check">✓</span>}
                 </li>
               ))}
             </ul>
@@ -111,6 +150,7 @@ const Dashboard = () => {
             <Quiz 
               module={courseData.modules[currentVideo]}
               onComplete={handleQuizCompletion}
+              onReviewModule={handleReviewModule}
             />
           ) : (
             <CourseContent 
@@ -118,6 +158,7 @@ const Dashboard = () => {
               onComplete={() => markAsComplete(courseData.modules[currentVideo].id)}
               isLastModule={currentVideo === courseData.modules.length - 1}
               quizCompleted={quizCompleted}
+              onReviewModule={handleReviewModule}
             />
           )}
         </main>

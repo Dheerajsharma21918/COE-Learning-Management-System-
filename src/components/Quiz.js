@@ -1,15 +1,18 @@
+
 // components/Quiz.js
+
 import React, { useState } from 'react';
 import './Quiz.css';
 
-const Quiz = ({ module, onComplete }) => {
+const Quiz = ({ module, onComplete, onReviewModule }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [score, setScore] = useState(0);
 
-  // Quiz questions for first video
+  // Your quiz questions array here...
   const video1Questions = [
+
     {
       id: 1,
       question: "What is the primary function of the GKG Titan SMT Screen Printer?",
@@ -435,8 +438,7 @@ const Quiz = ({ module, onComplete }) => {
       correctAnswer: 2
     }
   ];
-
-  // Select the appropriate quiz based on the module
+  
   const quizQuestions = module.id === 1 ? video1Questions : video2Questions;
 
   const handleAnswerSelect = (questionIndex, answerIndex) => {
@@ -481,6 +483,15 @@ const Quiz = ({ module, onComplete }) => {
     setSelectedAnswers({});
     setShowResults(false);
     setScore(0);
+  };
+
+  const handleReviewModuleClick = () => {
+    // Reset quiz state and call the review function
+    setCurrentQuestion(0);
+    setSelectedAnswers({});
+    setShowResults(false);
+    setScore(0);
+    onReviewModule();
   };
 
   return (
@@ -546,23 +557,11 @@ const Quiz = ({ module, onComplete }) => {
               <div className="score-circle">
                 <span>{Math.round(score)}%</span>
               </div>
-              <div className="score-details">
-                <p>Your score: {Math.round(score)}%</p>
-                <p>Passing score: 70%</p>
-                <p>
-                  {score >= 70 
-                    ? `You answered ${Object.values(selectedAnswers).filter((answer, index) => 
-                        answer === quizQuestions[index].correctAnswer).length} out of ${quizQuestions.length} questions correctly.`
-                    : `You answered ${Object.values(selectedAnswers).filter((answer, index) => 
-                        answer === quizQuestions[index].correctAnswer).length} out of ${quizQuestions.length} questions correctly.`
-                  }
-                </p>
-              </div>
             </div>
             <p className="result-message">
               {score >= 70 
-                ? `You passed the quiz! You can now proceed to the ${module.id === 1 ? 'next module' : 'course completion'}.`
-                : `Your score is below the required 70%. Please review the material and try again.`
+                ? `You passed the quiz with a score of ${Math.round(score)}%!`
+                : `Your score is ${Math.round(score)}%, which is below the required 70%.`
               }
             </p>
             <div className="result-actions">
@@ -582,7 +581,7 @@ const Quiz = ({ module, onComplete }) => {
                     Retake Quiz
                   </button>
                   <button 
-                    onClick={() => onComplete(false)}
+                    onClick={handleReviewModuleClick}
                     className="btn-secondary"
                   >
                     Review Module Again
@@ -598,3 +597,4 @@ const Quiz = ({ module, onComplete }) => {
 };
 
 export default Quiz;
+ 
