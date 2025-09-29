@@ -163,6 +163,11 @@ const Dashboard = () => {
           )}
         </main>
       </div>
+      <footer className="dashboard-footer">
+        <div className="footer-content">
+          <p>Powered By : DXS Presents</p>
+        </div>
+      </footer>
     </div>
   );
 };
