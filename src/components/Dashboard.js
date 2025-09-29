@@ -21,9 +21,9 @@ const Dashboard = () => {
     {
       id: 2,
       title: "Solder Paste Printing Defects",
-      videoUrl: "https://drive.google.com/file/d/15aWklDdy_D3hr34nGOK8mLGx-av5_PRs/preview",
+      videoUrl: "https://drive.google.com/file/d/1xZ_AYf5gv-DvjzDwEzZbrP_yggqGixic/preview",
       description: "Understand the solder paste printing process, common defects, and quality control measures.",
-      duration: "04:32",
+      duration: "03:32",
       completed: false,
       quizPassed: false
     }
