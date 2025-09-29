@@ -626,6 +626,49 @@
     padding: 1rem;
   }
 }
+/* Footer Styles */
+.dashboard-footer {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  color: white;
+  padding: 1rem 2rem;
+  text-align: center;
+  border-top: 3px solid #3498db;
+  margin-top: auto; /* Push footer to bottom */
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-content p {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ecf0f1;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+  .dashboard-footer {
+    padding: 0.8rem 1rem;
+  }
+  
+  .footer-content p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-footer {
+    padding: 0.6rem 0.8rem;
+  }
+  
+  .footer-content p {
+    font-size: 0.9rem;
+  }
+}
 
 /* Landscape Orientation for Mobile */
 @media (max-height: 500px) and (orientation: landscape) {
